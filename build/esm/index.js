@@ -1,0 +1,13 @@
+import { System } from './core';
+export * from './behaviour';
+export * from './debug';
+export * from './ease';
+export * from './emitter';
+export * from './initializer';
+export * from './math';
+export * from './renderer';
+export * from './utils';
+export * from './zone';
+export { System, Particle, Pool } from './core';
+export default System;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9pbmRleC5qcyJdLCJuYW1lcyI6WyJTeXN0ZW0iLCJQYXJ0aWNsZSIsIlBvb2wiXSwibWFwcGluZ3MiOiJBQUFBLFNBQVNBLE1BQVQsUUFBdUIsUUFBdkI7QUFFQSxjQUFjLGFBQWQ7QUFDQSxjQUFjLFNBQWQ7QUFDQSxjQUFjLFFBQWQ7QUFDQSxjQUFjLFdBQWQ7QUFDQSxjQUFjLGVBQWQ7QUFDQSxjQUFjLFFBQWQ7QUFDQSxjQUFjLFlBQWQ7QUFDQSxjQUFjLFNBQWQ7QUFDQSxjQUFjLFFBQWQ7QUFDQSxTQUFTQSxNQUFULEVBQWlCQyxRQUFqQixFQUEyQkMsSUFBM0IsUUFBdUMsUUFBdkM7QUFDQSxlQUFlRixNQUFmIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgU3lzdGVtIH0gZnJvbSAnLi9jb3JlJztcclxuXHJcbmV4cG9ydCAqIGZyb20gJy4vYmVoYXZpb3VyJztcclxuZXhwb3J0ICogZnJvbSAnLi9kZWJ1Zyc7XHJcbmV4cG9ydCAqIGZyb20gJy4vZWFzZSc7XHJcbmV4cG9ydCAqIGZyb20gJy4vZW1pdHRlcic7XHJcbmV4cG9ydCAqIGZyb20gJy4vaW5pdGlhbGl6ZXInO1xyXG5leHBvcnQgKiBmcm9tICcuL21hdGgnO1xyXG5leHBvcnQgKiBmcm9tICcuL3JlbmRlcmVyJztcclxuZXhwb3J0ICogZnJvbSAnLi91dGlscyc7XHJcbmV4cG9ydCAqIGZyb20gJy4vem9uZSc7XHJcbmV4cG9ydCB7IFN5c3RlbSwgUGFydGljbGUsIFBvb2wgfSBmcm9tICcuL2NvcmUnO1xyXG5leHBvcnQgZGVmYXVsdCBTeXN0ZW07XHJcbiJdfQ==

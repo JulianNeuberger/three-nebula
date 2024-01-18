@@ -1,0 +1,82 @@
+import * as Zone from '../zone';
+import Behaviour from './Behaviour';
+import { DEFAULT_CROSS_TYPE } from './constants';
+import { getEasingByName } from '../ease';
+import { BEHAVIOUR_TYPE_CROSS_ZONE as type } from './types';
+/**
+ * Behaviour that allows for specific functions to be called on particles when
+ * they interact with a zone.
+ *
+ */
+
+export default class CrossZone extends Behaviour {
+  /**
+   * Constructs a CrossZone behaviour instance.
+   *
+   * @param {Zone} zone - the zone used to apply to particles with this behaviour
+   * @param {string} [crossType=DEFAULT_CROSS_TYPE] - enum of cross types, valid strings include 'dead', 'bound', 'cross'
+   * @param {number} life - The life of the particle
+   * @param {function} easing - The behaviour's decaying trend
+   * @param {boolean} [isEnabled=true] - Determines if the behaviour will be applied or not
+   */
+  constructor(zone, crossType, life, easing, isEnabled) {
+    super(life, easing, type, isEnabled);
+    this.reset(zone, crossType);
+  }
+  /**
+   * Resets the behaviour properties.
+   *
+   * @param {Zone} zone - the zone used to apply to particles with this behaviour
+   * @param {string} [crossType=DEFAULT_CROSS_TYPE] - enum of cross types, valid strings include 'dead', 'bound', 'cross'
+   * @param {number} life - The life of the particle
+   * @param {function} easing - The behaviour's decaying trend
+   */
+
+
+  reset(zone, crossType = DEFAULT_CROSS_TYPE, life, easing) {
+    /**
+     * @desc The zone used to apply to particles with this behaviour
+     * @type {Zone}
+     */
+    this.zone = zone;
+    this.zone.crossType = crossType;
+    life && super.reset(life, easing);
+  }
+  /**
+   * Applies the behaviour to the particle.
+   *
+   * @see {@link '../zone/Zone.js'} crossing
+   * @param {object} particle - the particle to apply the behaviour to
+   * @param {number} time - engine time
+   * @param {integer} index - the particle index
+   * @return void
+   */
+
+
+  mutate(particle, time, index) {
+    this.energize(particle, time, index);
+    this.zone.crossing.call(this.zone, particle);
+  }
+  /**
+   * Creates a CrossZone initializer from JSON.
+   *
+   * @param {object} json - The JSON to construct the instance from.
+   * @return {CrossZone}
+   */
+
+
+  static fromJSON(json) {
+    const {
+      zoneType,
+      zoneParams,
+      crossType,
+      life,
+      easing,
+      isEnabled = true
+    } = json;
+    const zone = new Zone[zoneType](...Object.values(zoneParams));
+    return new CrossZone(zone, crossType, life, getEasingByName(easing), isEnabled);
+  }
+
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NyYy9iZWhhdmlvdXIvQ3Jvc3Nab25lLmpzIl0sIm5hbWVzIjpbIlpvbmUiLCJCZWhhdmlvdXIiLCJERUZBVUxUX0NST1NTX1RZUEUiLCJnZXRFYXNpbmdCeU5hbWUiLCJCRUhBVklPVVJfVFlQRV9DUk9TU19aT05FIiwidHlwZSIsIkNyb3NzWm9uZSIsImNvbnN0cnVjdG9yIiwiem9uZSIsImNyb3NzVHlwZSIsImxpZmUiLCJlYXNpbmciLCJpc0VuYWJsZWQiLCJyZXNldCIsIm11dGF0ZSIsInBhcnRpY2xlIiwidGltZSIsImluZGV4IiwiZW5lcmdpemUiLCJjcm9zc2luZyIsImNhbGwiLCJmcm9tSlNPTiIsImpzb24iLCJ6b25lVHlwZSIsInpvbmVQYXJhbXMiLCJPYmplY3QiLCJ2YWx1ZXMiXSwibWFwcGluZ3MiOiJBQUFBLE9BQU8sS0FBS0EsSUFBWixNQUFzQixTQUF0QjtBQUVBLE9BQU9DLFNBQVAsTUFBc0IsYUFBdEI7QUFDQSxTQUFTQyxrQkFBVCxRQUFtQyxhQUFuQztBQUNBLFNBQVNDLGVBQVQsUUFBZ0MsU0FBaEM7QUFDQSxTQUFTQyx5QkFBeUIsSUFBSUMsSUFBdEMsUUFBa0QsU0FBbEQ7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUNBLGVBQWUsTUFBTUMsU0FBTixTQUF3QkwsU0FBeEIsQ0FBa0M7QUFDL0M7QUFDRjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0VNLEVBQUFBLFdBQVcsQ0FBQ0MsSUFBRCxFQUFPQyxTQUFQLEVBQWtCQyxJQUFsQixFQUF3QkMsTUFBeEIsRUFBZ0NDLFNBQWhDLEVBQTJDO0FBQ3BELFVBQU1GLElBQU4sRUFBWUMsTUFBWixFQUFvQk4sSUFBcEIsRUFBMEJPLFNBQTFCO0FBRUEsU0FBS0MsS0FBTCxDQUFXTCxJQUFYLEVBQWlCQyxTQUFqQjtBQUNEO0FBRUQ7QUFDRjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7O0FBQ0VJLEVBQUFBLEtBQUssQ0FBQ0wsSUFBRCxFQUFPQyxTQUFTLEdBQUdQLGtCQUFuQixFQUF1Q1EsSUFBdkMsRUFBNkNDLE1BQTdDLEVBQXFEO0FBQ3hEO0FBQ0o7QUFDQTtBQUNBO0FBQ0ksU0FBS0gsSUFBTCxHQUFZQSxJQUFaO0FBQ0EsU0FBS0EsSUFBTCxDQUFVQyxTQUFWLEdBQXNCQSxTQUF0QjtBQUVBQyxJQUFBQSxJQUFJLElBQUksTUFBTUcsS0FBTixDQUFZSCxJQUFaLEVBQWtCQyxNQUFsQixDQUFSO0FBQ0Q7QUFFRDtBQUNGO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7OztBQUNFRyxFQUFBQSxNQUFNLENBQUNDLFFBQUQsRUFBV0MsSUFBWCxFQUFpQkMsS0FBakIsRUFBd0I7QUFDNUIsU0FBS0MsUUFBTCxDQUFjSCxRQUFkLEVBQXdCQyxJQUF4QixFQUE4QkMsS0FBOUI7QUFFQSxTQUFLVCxJQUFMLENBQVVXLFFBQVYsQ0FBbUJDLElBQW5CLENBQXdCLEtBQUtaLElBQTdCLEVBQW1DTyxRQUFuQztBQUNEO0FBRUQ7QUFDRjtBQUNBO0FBQ0E7QUFDQTtBQUNBOzs7QUFDaUIsU0FBUk0sUUFBUSxDQUFDQyxJQUFELEVBQU87QUFDcEIsVUFBTTtBQUNKQyxNQUFBQSxRQURJO0FBRUpDLE1BQUFBLFVBRkk7QUFHSmYsTUFBQUEsU0FISTtBQUlKQyxNQUFBQSxJQUpJO0FBS0pDLE1BQUFBLE1BTEk7QUFNSkMsTUFBQUEsU0FBUyxHQUFHO0FBTlIsUUFPRlUsSUFQSjtBQVNBLFVBQU1kLElBQUksR0FBRyxJQUFJUixJQUFJLENBQUN1QixRQUFELENBQVIsQ0FBbUIsR0FBR0UsTUFBTSxDQUFDQyxNQUFQLENBQWNGLFVBQWQsQ0FBdEIsQ0FBYjtBQUVBLFdBQU8sSUFBSWxCLFNBQUosQ0FDTEUsSUFESyxFQUVMQyxTQUZLLEVBR0xDLElBSEssRUFJTFAsZUFBZSxDQUFDUSxNQUFELENBSlYsRUFLTEMsU0FMSyxDQUFQO0FBT0Q7O0FBM0U4QyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCAqIGFzIFpvbmUgZnJvbSAnLi4vem9uZSc7XHJcblxyXG5pbXBvcnQgQmVoYXZpb3VyIGZyb20gJy4vQmVoYXZpb3VyJztcclxuaW1wb3J0IHsgREVGQVVMVF9DUk9TU19UWVBFIH0gZnJvbSAnLi9jb25zdGFudHMnO1xyXG5pbXBvcnQgeyBnZXRFYXNpbmdCeU5hbWUgfSBmcm9tICcuLi9lYXNlJztcclxuaW1wb3J0IHsgQkVIQVZJT1VSX1RZUEVfQ1JPU1NfWk9ORSBhcyB0eXBlIH0gZnJvbSAnLi90eXBlcyc7XHJcblxyXG4vKipcclxuICogQmVoYXZpb3VyIHRoYXQgYWxsb3dzIGZvciBzcGVjaWZpYyBmdW5jdGlvbnMgdG8gYmUgY2FsbGVkIG9uIHBhcnRpY2xlcyB3aGVuXHJcbiAqIHRoZXkgaW50ZXJhY3Qgd2l0aCBhIHpvbmUuXHJcbiAqXHJcbiAqL1xyXG5leHBvcnQgZGVmYXVsdCBjbGFzcyBDcm9zc1pvbmUgZXh0ZW5kcyBCZWhhdmlvdXIge1xyXG4gIC8qKlxyXG4gICAqIENvbnN0cnVjdHMgYSBDcm9zc1pvbmUgYmVoYXZpb3VyIGluc3RhbmNlLlxyXG4gICAqXHJcbiAgICogQHBhcmFtIHtab25lfSB6b25lIC0gdGhlIHpvbmUgdXNlZCB0byBhcHBseSB0byBwYXJ0aWNsZXMgd2l0aCB0aGlzIGJlaGF2aW91clxyXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBbY3Jvc3NUeXBlPURFRkFVTFRfQ1JPU1NfVFlQRV0gLSBlbnVtIG9mIGNyb3NzIHR5cGVzLCB2YWxpZCBzdHJpbmdzIGluY2x1ZGUgJ2RlYWQnLCAnYm91bmQnLCAnY3Jvc3MnXHJcbiAgICogQHBhcmFtIHtudW1iZXJ9IGxpZmUgLSBUaGUgbGlmZSBvZiB0aGUgcGFydGljbGVcclxuICAgKiBAcGFyYW0ge2Z1bmN0aW9ufSBlYXNpbmcgLSBUaGUgYmVoYXZpb3VyJ3MgZGVjYXlpbmcgdHJlbmRcclxuICAgKiBAcGFyYW0ge2Jvb2xlYW59IFtpc0VuYWJsZWQ9dHJ1ZV0gLSBEZXRlcm1pbmVzIGlmIHRoZSBiZWhhdmlvdXIgd2lsbCBiZSBhcHBsaWVkIG9yIG5vdFxyXG4gICAqL1xyXG4gIGNvbnN0cnVjdG9yKHpvbmUsIGNyb3NzVHlwZSwgbGlmZSwgZWFzaW5nLCBpc0VuYWJsZWQpIHtcclxuICAgIHN1cGVyKGxpZmUsIGVhc2luZywgdHlwZSwgaXNFbmFibGVkKTtcclxuXHJcbiAgICB0aGlzLnJlc2V0KHpvbmUsIGNyb3NzVHlwZSk7XHJcbiAgfVxyXG5cclxuICAvKipcclxuICAgKiBSZXNldHMgdGhlIGJlaGF2aW91ciBwcm9wZXJ0aWVzLlxyXG4gICAqXHJcbiAgICogQHBhcmFtIHtab25lfSB6b25lIC0gdGhlIHpvbmUgdXNlZCB0byBhcHBseSB0byBwYXJ0aWNsZXMgd2l0aCB0aGlzIGJlaGF2aW91clxyXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBbY3Jvc3NUeXBlPURFRkFVTFRfQ1JPU1NfVFlQRV0gLSBlbnVtIG9mIGNyb3NzIHR5cGVzLCB2YWxpZCBzdHJpbmdzIGluY2x1ZGUgJ2RlYWQnLCAnYm91bmQnLCAnY3Jvc3MnXHJcbiAgICogQHBhcmFtIHtudW1iZXJ9IGxpZmUgLSBUaGUgbGlmZSBvZiB0aGUgcGFydGljbGVcclxuICAgKiBAcGFyYW0ge2Z1bmN0aW9ufSBlYXNpbmcgLSBUaGUgYmVoYXZpb3VyJ3MgZGVjYXlpbmcgdHJlbmRcclxuICAgKi9cclxuICByZXNldCh6b25lLCBjcm9zc1R5cGUgPSBERUZBVUxUX0NST1NTX1RZUEUsIGxpZmUsIGVhc2luZykge1xyXG4gICAgLyoqXHJcbiAgICAgKiBAZGVzYyBUaGUgem9uZSB1c2VkIHRvIGFwcGx5IHRvIHBhcnRpY2xlcyB3aXRoIHRoaXMgYmVoYXZpb3VyXHJcbiAgICAgKiBAdHlwZSB7Wm9uZX1cclxuICAgICAqL1xyXG4gICAgdGhpcy56b25lID0gem9uZTtcclxuICAgIHRoaXMuem9uZS5jcm9zc1R5cGUgPSBjcm9zc1R5cGU7XHJcblxyXG4gICAgbGlmZSAmJiBzdXBlci5yZXNldChsaWZlLCBlYXNpbmcpO1xyXG4gIH1cclxuXHJcbiAgLyoqXHJcbiAgICogQXBwbGllcyB0aGUgYmVoYXZpb3VyIHRvIHRoZSBwYXJ0aWNsZS5cclxuICAgKlxyXG4gICAqIEBzZWUge0BsaW5rICcuLi96b25lL1pvbmUuanMnfSBjcm9zc2luZ1xyXG4gICAqIEBwYXJhbSB7b2JqZWN0fSBwYXJ0aWNsZSAtIHRoZSBwYXJ0aWNsZSB0byBhcHBseSB0aGUgYmVoYXZpb3VyIHRvXHJcbiAgICogQHBhcmFtIHtudW1iZXJ9IHRpbWUgLSBlbmdpbmUgdGltZVxyXG4gICAqIEBwYXJhbSB7aW50ZWdlcn0gaW5kZXggLSB0aGUgcGFydGljbGUgaW5kZXhcclxuICAgKiBAcmV0dXJuIHZvaWRcclxuICAgKi9cclxuICBtdXRhdGUocGFydGljbGUsIHRpbWUsIGluZGV4KSB7XHJcbiAgICB0aGlzLmVuZXJnaXplKHBhcnRpY2xlLCB0aW1lLCBpbmRleCk7XHJcblxyXG4gICAgdGhpcy56b25lLmNyb3NzaW5nLmNhbGwodGhpcy56b25lLCBwYXJ0aWNsZSk7XHJcbiAgfVxyXG5cclxuICAvKipcclxuICAgKiBDcmVhdGVzIGEgQ3Jvc3Nab25lIGluaXRpYWxpemVyIGZyb20gSlNPTi5cclxuICAgKlxyXG4gICAqIEBwYXJhbSB7b2JqZWN0fSBqc29uIC0gVGhlIEpTT04gdG8gY29uc3RydWN0IHRoZSBpbnN0YW5jZSBmcm9tLlxyXG4gICAqIEByZXR1cm4ge0Nyb3NzWm9uZX1cclxuICAgKi9cclxuICBzdGF0aWMgZnJvbUpTT04oanNvbikge1xyXG4gICAgY29uc3Qge1xyXG4gICAgICB6b25lVHlwZSxcclxuICAgICAgem9uZVBhcmFtcyxcclxuICAgICAgY3Jvc3NUeXBlLFxyXG4gICAgICBsaWZlLFxyXG4gICAgICBlYXNpbmcsXHJcbiAgICAgIGlzRW5hYmxlZCA9IHRydWUsXHJcbiAgICB9ID0ganNvbjtcclxuXHJcbiAgICBjb25zdCB6b25lID0gbmV3IFpvbmVbem9uZVR5cGVdKC4uLk9iamVjdC52YWx1ZXMoem9uZVBhcmFtcykpO1xyXG5cclxuICAgIHJldHVybiBuZXcgQ3Jvc3Nab25lKFxyXG4gICAgICB6b25lLFxyXG4gICAgICBjcm9zc1R5cGUsXHJcbiAgICAgIGxpZmUsXHJcbiAgICAgIGdldEVhc2luZ0J5TmFtZShlYXNpbmcpLFxyXG4gICAgICBpc0VuYWJsZWRcclxuICAgICk7XHJcbiAgfVxyXG59XHJcbiJdfQ==

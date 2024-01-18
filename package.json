@@ -11,6 +11,9 @@
       "compression": "none"
     }
   ],
+  "files": [
+    "build"
+  ],
   "directories": {
     "docs": "docs",
     "website": "website"
